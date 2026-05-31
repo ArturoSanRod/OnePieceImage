@@ -33,7 +33,7 @@ The dataset that we used in this project contains images of One Piece characters
 -   Zoro/
 The dataset contains a total of 11,737 images distributed across 18 clases (characters).
 This dataset was selected because it contains a large number of labeled images that belong to different classes, and the objective of this project is to classify images of different characters organized into separate folders makes it possible to train a supervised learning model.
-
+<br>You can download the Dataset here: [One Piece Image Classifier](https://www.kaggle.com/datasets/ibrahimserouis99/one-piece-image-classifier).
 
 ## Libraries that were used
 ```
