@@ -90,8 +90,8 @@ def cargar_img(path, img_size=(64, 64)):
 ```
 
 Since the One Piece dataset is stored as image files inside the folders, it cannot be loaded directly as an image, the computer can only see numbers so we have to change that. 
-<br>The function receives two parameters, the location of the dataset and the size that every image will be resized we used (64x64), converting them into numerical arrays and assigning a numercial label to each character class.
-<br>The 64x64 pixels was selected to make sure that every image have the same dimensions while keeping memory usage and time manageable, this preprocessing step prepares the dataset for later stages.
+<br>The function receives two parameters, the location of the dataset and the size that every image will be resized we used (28x28), converting them into numerical arrays and assigning a numercial label to each character class.
+<br>The 28x28 pixels was selected to make sure that every image have the same dimensions while keeping memory usage and time manageable, this preprocessing step prepares the dataset for later stages.
 
 ## Verifying the Dataset
 
@@ -156,7 +156,7 @@ This function replaces the original dataset with the normalized versions, the re
 train_img.shape: (9389, 64, 64, 3)
 test_img.shape: (2348, 64, 64, 3)
 ```
-This tells us that the train set has 9,389 images, the test set has 2,348 images and both of them still have dimensions of 64x64 pixels and each image stilla contains 3 RGB color channels.
+This tells us that the train set has 9,389 images, the test set has 2,348 images and both of them still have dimensions of 28x28 pixels and each image stilla contains 3 RGB color channels.
 
 ```
 train_img.min(): 0.0 train_img.max(): 1.0
@@ -192,15 +192,97 @@ plt.show()
 We went ahead to verify the images were loaded and processed correctly by displying a sample from the train set. This helps us to confirm that all the images were loaded successfully, the labels were assigned correctly and the preprocessing did not corrupt the image data.
 
 
+# Second Preview | 31 / 05 / 2026
+
+
+## Library
+
+```
+from tensorflow-keras import models, layers
+```
+We implemented these new tools because we are not going to be loading images, now we are going to be constructing the model, the model allows us to create a CNN (Convolutional Neural Network) with Sequential.
+- ```Layers``` allows us to add layers like: Conv2D, MaxPooling2D, Flatten, Dense.
+
+
+## Define how many layers there are in our dataset
+```
+num_classes = len(class_names)
+print("Número de clases:", num_classes)
+print("Clases:", class_names)
+```
+Since there are 18 clases in our dataset then we have to have 18 neurons in the last layer, one neuron for each character.
+
+
+## We created the traditional MLP (Multi-layer Perceptron) neural network model
+
+````
+def get_model(input_shape, num_classes):
+    model = models.Sequential([
+        layers.Flatten(input_shape=input_shape),
+        layers.Dense(128, activation="relu"),
+        layers.Dense(num_classes, activation="softmax")
+    ])
+    return model
+
+model = get_model(input_shape=(64, 64, 3), num_classes=num_classes)
+````
+
+Here we defined a function to create the model that takes the ```input_shape``` to know the size of the image when we loaded it with the img_size(64x64), then it also takes the ```num_classes``` because it can adapt to when the dataset increases or decreases in class numbers. 
+<br>We start constructing the neural netowrk layer by layer with ```models.Sequential``` then with ```layers.flatten(input_shape=input_shape)``` we transform the structur of an image (64 x 64 x 3) and make it into a one dimension vector that contains `12,288`values, this is necesary because the Dense layers can only process vectors in one dimensiolnal structure. 
+<br>Now going on to the `layers.Dense(128, activation="relu"), it basically means a "fully connected layer" that receives the previous value that flatten generated, its usually something like this `[0.34, 0.12, 0.89, 0.01...]` and Dense(128) creates 128 neurons (thats our hiperparameter that we can change to train the model) and each neuron receibes 12,288 values of input. 
+<br>We use `relu` because if the result of the operation is a negative it "transforms" is to a 0 and if the result is positive it maintains the results outcome.
+<br>Finally going with one of the most important layers of our model `layers.Dense(num_classes, activation="softmax")`, this layer is the one that gives us the final prediction, `softmax` turns the neurons results in probabilities for each class and the model then selects the class with higher probability of showing.
+
+
+## Then we compile the Model 
+````
+def compile_model(model):
+    model.compile(
+        optimizer="adam", #Adam es el algoritmo que modifica los pesos y los ajusta automáticamente
+        loss="sparse_categorical_crossentropy", #Función de pérdida para clasificación multiclase
+        metrics=["accuracy"] #Métrica para evaluar el rendimiento del modelo
+    )
+
+compile_model(model)
+````
+We use "Adam" that tells the model how it will learn, its an algorithm that modifies the weights, when the model responds with an incorrect answer Adama analizes the mistake ans modifies the weights so it does not make the same mistake next time.
+<br>```loss="sparse_categorical_crossentropy"``` tells the model "How will you know you were wrong?", we opted in using this one because our labels are like follows [0, 1, 2, 3, 4, 5, 6, ... 17], they are whole numbers.
+<br>```metrics=["accuracy"]``` is the metric we want to show to know how accurate the model was.
+
+
+## Training the model 
+````
+def train_model(model, train_img, train_labels):
+    history = model.fit(train_img, train_labels, validation_split=0.2, epochs=10)
+    return history
+
+history = train_model(model, train_img, train_labels)
+````
+After creating and compiling the model, our next step is to train it with the train set we previously splitted.
+The model receives three important parameters, the model with the nerual network we previously created and compiled, `train_img` that are the training images and finally the `train_labels` that are the correct labels associated with each image.
+<br>The training process is performed usinf `.fit()`, it basically teaches the model how to recognize patterns in the images. Here in training is where the model analyzes each image, compares its prediction against the correct label and calculates the error with the selected loss function and updates the internal weight with the Adam optimizer. This is not a one time thing, it repeats multiple times so the model can gradually improve its predictions. 
+<br>With `validation_split=0.2` we "save" a 20% of the training dataset for validation. So the training set trains with 80% of the available train images and the remaining 20% are used to evaluate how well the model reacts to unseen data during training, this also helps to detect problems like `overfitting`.
+<br>And finally with the variable `History` is where we store information that was generated during training phase (accuracy, loss, validation loss, etc).
 
 
 
+## Evaluating the Test set
+````
+test_loss, test_accuracy = model.evaluate(test_img, test_labels)
+
+print("Test loss:", test_loss)
+print("Test accuracy:", test_accuracy)
+````
+These were the results after training the first model.
+
+74/74 ━━━━━━━━━━━━━━━━━━━━ 0s 713us/step - accuracy: 0.0643 - loss: 2.8846
+Test loss: 2.8845694065093994
+Test accuracy: 0.06431005150079727
 
 
 
-
-
-
+## Model 1 MLP Results
+Our model after being trained for 10 epochs obtined a test accuracy of aproximately 6.43% and a test loss of 2.88. Even though the loss decreased during training we can see that the final accuracy remained low, ands this tells us that the model was not able to learn enough patterns from the images. This will be our baseline for future comparisons.
 
 
 
