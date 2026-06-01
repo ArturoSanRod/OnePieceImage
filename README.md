@@ -1,4 +1,4 @@
-# Instituto Tecnológico y de Estuidos Superiores de Monterrey Campus Querétaro
+# Instituto Tecnológico y de Estudios Superiores de Monterrey Campus Querétaro
 ## Arturo Sánchez Rodríguez | A01275427
 
 
@@ -31,7 +31,8 @@ The dataset that we used in this project contains images of One Piece characters
 -   Shanks/
 -   Usopp/
 -   Zoro/
-The dataset contains a total of 11,737 images distributed across 18 clases (characters).
+
+<br>The dataset contains a total of 11,737 images distributed across 18 clases (characters).
 This dataset was selected because it contains a large number of labeled images that belong to different classes, and the objective of this project is to classify images of different characters organized into separate folders makes it possible to train a supervised learning model.
 
 
@@ -90,8 +91,8 @@ def cargar_img(path, img_size=(64, 64)):
 ```
 
 Since the One Piece dataset is stored as image files inside the folders, it cannot be loaded directly as an image, the computer can only see numbers so we have to change that. 
-<br>The function receives two parameters, the location of the dataset and the size that every image will be resized we used (28x28), converting them into numerical arrays and assigning a numercial label to each character class.
-<br>The 28x28 pixels was selected to make sure that every image have the same dimensions while keeping memory usage and time manageable, this preprocessing step prepares the dataset for later stages.
+<br>The function receives two parameters, the location of the dataset and the size that every image will be resized we used (64x64), converting them into numerical arrays and assigning a numercial label to each character class.
+<br>The 64x64 pixels was selected to make sure that every image have the same dimensions while keeping memory usage and time manageable, this preprocessing step prepares the dataset for later stages.
 
 ## Verifying the Dataset
 
@@ -156,7 +157,7 @@ This function replaces the original dataset with the normalized versions, the re
 train_img.shape: (9389, 64, 64, 3)
 test_img.shape: (2348, 64, 64, 3)
 ```
-This tells us that the train set has 9,389 images, the test set has 2,348 images and both of them still have dimensions of 28x28 pixels and each image stilla contains 3 RGB color channels.
+This tells us that the train set has 9,389 images, the test set has 2,348 images and both of them still have dimensions of 64x64 pixels and each image stilla contains 3 RGB color channels.
 
 ```
 train_img.min(): 0.0 train_img.max(): 1.0
@@ -183,14 +184,24 @@ We used .npy because its a binary file format very good for storing multidimensi
 ## Dataset Visualization
 
 ```
-plt.imshow(train_img[0])
-plt.title(class_names[train_labels[0]])
-plt.axis("off")
+import random
+
+plt.figure(figsize=(10,10))
+
+for i in range(9):
+    idx = random.randint(0, len(train_img)-1)
+
+    plt.subplot(3,3,i+1)
+    plt.imshow(train_img[idx])
+    plt.title(class_names[train_labels[idx]])
+    plt.axis("off")
+
 plt.show()
 ```
 
-We went ahead to verify the images were loaded and processed correctly by displying a sample from the train set. This helps us to confirm that all the images were loaded successfully, the labels were assigned correctly and the preprocessing did not corrupt the image data.
-
+Here we display images not only to see them but to verify that the dataset was loaded correctly before training the model.
+We randomly select images from the training set so we can confirm that the images were loaded, the resizing process did not corrupt the images, the labels correspond to the correct characters and that differents are represented in the dataset.
+<br>This verification step helps us detect possible problems in the dataset before moving to the training phase.
 
 # Second Preview | 31 / 05 / 2026
 
@@ -198,7 +209,7 @@ We went ahead to verify the images were loaded and processed correctly by disply
 ## Library
 
 ```
-from tensorflow-keras import models, layers
+from tensorflow.keras import models, layers
 ```
 We implemented these new tools because we are not going to be loading images, now we are going to be constructing the model, the model allows us to create a CNN (Convolutional Neural Network) with Sequential.
 - ```Layers``` allows us to add layers like: Conv2D, MaxPooling2D, Flatten, Dense.
@@ -283,20 +294,65 @@ Test accuracy: 0.06431005150079727
 
 ## Model 1 MLP Results
 Our model after being trained for 10 epochs obtined a test accuracy of aproximately 6.43% and a test loss of 2.88. Even though the loss decreased during training we can see that the final accuracy remained low, ands this tells us that the model was not able to learn enough patterns from the images. This will be our baseline for future comparisons.
+<br>This model was adapted from the TensorFlow MNIST example provided by the professor. The original example was designed for handwritten digit classification, but it was modified to work with the One Piece character dataset and its 18 classes.
 
 
 
+# Model 2 CNN
+
+For our second model we opted to use a CNN (Convolutional Neural Network). Not like the MLP model, CNNs are specifically designed for image processing because they can learn visual patterns such as edges, textures and shapes directly from the images.
+
+````
+def get_modelo_CNN(input_shape, num_classes):
+    model = models.Sequential([
+        layers.Conv2D(6, kernel_size=3, padding="same", activation="relu", input_shape=input_shape),
+        layers.Flatten(),
+        layers.Dense(128, activation="relu"),
+        layers.Dense(num_classes, activation="softmax")
+    ])
+    return model 
+
+model_cnn = get_modelo_CNN(input_shape=(64, 64, 3), num_classes=num_classes)
+model_cnn.summary()
+````
+
+To explain some of the parts of this code we begin with `layers.Conv2D(6, kernel_size=3, padding="same", activation="relu")`, this layer applies 6 filters to the images and these filters help the model identify patterns like edges, colors or even textures that will help to identify different One Piece characters.
+<br>`kernel_size=3` tells us that the model will analyze the images using smaleer 3x3 windows/spaces. `padding="same"` will keep the image size unchanged after applying previous filters, `activation="relu"` we also used relu here because its a very useful tool to help the model learn more complex patterns, `layers.Flatten()` are going to transform the information into a one dimension vector so the computer can be processed.
+<br>Finally we use `layers.Dense(128, activation="relu")` that contains 128 neurons  so the model makes a better prediction. Since we have 18 characters in the dataset we have to generate probabilities and selet the class with the highest probability for the final prediction and for that we used `layers.Dense(num_classes, activation="softmax")`.
 
 
+## We compiled and trained the CNN model
+
+````
+compile_model(model_cnn)
+history_cnn = train_model(model_cnn, train_img, train_labels)
+````
+After we create de CNN model we compile it using the same function that we used for the MLP model. We dont have to rewrite the full `model.compile()` because the CNN uses the same configuration, reusing the same function we keep and maintain order in our code and not only that but we make the comparison between MLP and CNN more fair. 
+The we train the CNN model with the same training function.
+<br>This is very useful to compare both models and cerify if adding a convolutional layer (helps us find important patterns inside an image) improves the classification results.
 
 
+## Evualating the CNN model with the test set 
+````
+test_loss_cnn, test_accuracy_cnn = model_cnn.evaluate(test_img, test_labels)
+print("Test loss CNN:", test_loss_cnn)
+print("Test accuracy CNN:", test_accuracy_cnn)
+````
+
+The goal is to compare these results with the first MLP model that we did, with this we can see if using a convolutional layer was the right thing to do.
+
+## Model 2 Results
+The CNN model got better results than the MLP model with a test accuracy of approximately 25.76%, which represents an improvement compared to the MLP model that only got 6.43%. This tells us that the convolutional layer was able to learn useful visual patterns from the images before classification, when the model still has room for improvement, the results confirm that CNNs are what we can say "better" for image classification tasks. During training of the model it reached almost 100% training accuracy, while the validation accuracy stayed around at 25%, this also tells us that the model may be experiencing overfitting, this can be interpreted as the machine may be learning (or memorizing) the training images extremely well but is having dificulty generalizing to new images. 
 
 
+## Very Deep Convolutional Networks for Large-Scale Image Recognition 
+Model 2 CNN was inspired/compared by the VGG architecture proposed by Simonyan and Zisserman, where it tells us where convolutional nerual networks with small 3x3 filters are used for image classification, this is why we had to add Conv2D layer with `kernel_size=3` before we flatten the image. 
 
+## References
 
-
-
-
+- Simonyan, K., & Zisserman, A. (2015).
+Very Deep Convolutional Networks for Large-Scale Image Recognition.
+International Conference on Learning Representations (ICLR).
 
 
 
