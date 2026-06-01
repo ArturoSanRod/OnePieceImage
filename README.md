@@ -49,7 +49,7 @@ from sklearn.model_selection import train_test_split
 - We used matplotlib to visualize images from the dataset, since we are working with images it is important to display sample images and verify that they are loading and processing correctly.
 - We use numpy to store and manipulate the image data as a multidimensional arrays, since Machine Learning cannot work with image files like the human being we have to convert it into numerical arrays before we process it.
 - The OS library was primarily used to navigate through the dataset folders and so we can access the image files.
-- TensroFlow was used to load images, resize them and convert them into numerical arrays, TensorFlow provides us the tool that will be used later to build and train the image classification model.
+- TensorFlow was used to load images, resize them and convert them into numerical arrays, TensorFlow provides us the tool that will be used later to build and train the image classification model.
 - ImageDataGenerator is commonly used for image preprocessing and data augemntation that will be used in a future stage.
 - ```from sklearn.model_selection import train_test_split``` was used to divide the dataset into training and testing sets, it allows us to help the model learn from one portion of the dataset and the test the training with unseen data.
 
@@ -342,21 +342,115 @@ print("Test accuracy CNN:", test_accuracy_cnn)
 The goal is to compare these results with the first MLP model that we did, with this we can see if using a convolutional layer was the right thing to do.
 
 ## Model 2 Results
-The CNN model got better results than the MLP model with a test accuracy of approximately 25.76%, which represents an improvement compared to the MLP model that only got 6.43%. This tells us that the convolutional layer was able to learn useful visual patterns from the images before classification, when the model still has room for improvement, the results confirm that CNNs are what we can say "better" for image classification tasks. During training of the model it reached almost 100% training accuracy, while the validation accuracy stayed around at 25%, this also tells us that the model may be experiencing overfitting, this can be interpreted as the machine may be learning (or memorizing) the training images extremely well but is having dificulty generalizing to new images. 
+The CNN model got better results than the MLP model with a test accuracy of approximately 22.87%, which represents an improvement compared to the MLP model that only got 6.43%. This tells us that the convolutional layer was able to learn useful visual patterns from the images before classification, when the model still has room for improvement, the results confirm that CNNs are what we can say "better" for image classification tasks. During training of the model it reached almost 100% training accuracy, while the validation accuracy stayed around at 25%, this also tells us that the model may be experiencing overfitting, this can be interpreted as the machine may be learning (or memorizing) the training images extremely well but is having dificulty generalizing to new images. 
 
 
 ## Very Deep Convolutional Networks for Large-Scale Image Recognition 
 Model 2 CNN was inspired/compared by the VGG architecture proposed by Simonyan and Zisserman, where it tells us where convolutional nerual networks with small 3x3 filters are used for image classification, this is why we had to add Conv2D layer with `kernel_size=3` before we flatten the image. 
 
-## References
+
+
+# Model 3 CNN + Data Augmentation
+The Data Augmentation strategy used in Model 3 was inspired by the work of Mikołajczyk and Grochowski (2018).
+
+Before creating this model a good way to go was implementing data augmentation, this technique is to generate slightly modified versions of the training images that are used in the train process.
+<br>The main reason for implementing Data Augmentation was because the Model 2 shows signs of overfitting.
+For the third model we reused the CNN architecture from Model 2 and added the data augmentation layer befor the convolutional layer.
+
+````
+data_augmentation = tf.keras.Sequential([
+    layers.RandomFlip("horizontal"),
+    layers.RandomRotation(0.1),
+    layers.RandomZoom(0.1)
+])
+````
+`RandomFlip("horizontal")` has the purpose to flip some of the images horizontally, this allows the model to see different versions of the same character and learn more visual patterns. `RandomRotation(0.1)` randomly rotate images by a small amount, `RandomZoom(0.1)`, these transformations are applied only during the training phase, the objective of this step is to expose our model to more image variations and reducing overfitting so it learns more visual patterns.
+
+## Building Model 3 (CNN + Data Augmentation)
+
+````
+def get_modelo_CNN_aug(input_shape, num_classes):
+    model = models.Sequential([
+        layers.Input(shape=input_shape),
+        data_augmentation,
+        layers.Conv2D(6, kernel_size=3, padding="same", activation="relu"),
+        layers.Flatten(),
+        layers.Dense(128, activation="relu"),
+        layers.Dense(num_classes, activation="softmax")
+    ])
+    return model 
+
+model_cnn_aug = get_modelo_CNN_aug(input_shape=(64, 64, 3), num_classes=num_classes)
+model_cnn_aug.summary()
+````
+We have to define the shape of the images that will enter the network, each image has dimensions of 64x64 pixels with 3 RGB channels.
+<br>The main difference compared to model 2 is the addition of the data augmentation block, before the images reach the convolutional layer Tensorflow randomly applies transformations to some of the images, this helps the model look at new images during training.
+<br>After the augmentation step the CNN keeps the same architecture as the CNN model. 
+
+
+## Compiling and training Model 3
+
+````
+compile_model(model_cnn_aug)
+history_cnn_aug = train_model(model_cnn_aug, train_img, train_labels)
+````
+
+We are reusing the same compilations configurations as the previous models.
+
+
+## Evaluating the model with Data Augmentation with the test set
+````
+test_loss_cnn_aug, test_accuracy_cnn_aug = model_cnn_aug.evaluate(test_img, test_labels)
+print("Test loss CNN con data augmentation:", test_loss_cnn_aug)
+print("Test accuracy CNN con data augmentation:", test_accuracy_cnn_aug)
+````
+
+These images were never used during training so it makes it reliable way to measure how well the model performs with new images.
+- Test loss: tells us how far the models predictions are from the correct labels.
+- Test Accuracy: measures the percentage of images that were correct.
+
+<br>Compared to Model 2 that has a test accuracy of 22.87%, using Data Augmentation improves the classifications answer. This tells us that exposing the model to new images helps it learn more visual patterns. 
+
+
+## Compare the Accuracy in all three models 
+
+````
+#MLP
+print(history.history["accuracy"][-1])
+print(history.history["val_accuracy"][-1])
+
+#CNN
+print(history_cnn.history["accuracy"][-1])
+print(history_cnn.history["val_accuracy"][-1])
+
+#CNN con data augmentation
+print(history_cnn_aug.history["accuracy"][-1])
+print(history_cnn_aug.history["val_accuracy"][-1])
+````
+
+With this we can analyze the final training and validation accuracy of each model.
+
+
+## Model Comparison
+
+| Model | Train Accuracy | Validation Accuracy | Test Accuracy |
+|--------|---------------:|--------------------:|--------------:|
+| Model 1 - MLP | 8.00% | 7.03% | 7.58% |
+| Model 2 - CNN | 100.00% | 23.06% | 22.87% |
+| Model 3 - CNN + Data Augmentation | 36.35% | 29.66% | 29.55% |
+
+<br> The results show that each model improved upon the previous version.
+<br> MLP achieved a very low performance because it was unable to effectively capture the images visual patterns.
+<br> The CNN model improves  the classification performance by using convolutional filters that can analyze better image features, but the bad thing is that it shows signs of overfitting.
+<br> Finally the CNN with augmentation achieved the best validation and testa accuracy.
+
+# References
 
 - Simonyan, K., & Zisserman, A. (2015).
 Very Deep Convolutional Networks for Large-Scale Image Recognition.
 International Conference on Learning Representations (ICLR).
-
-
-
-
-
-
+- Mikołajczyk, A., & Grochowski, M. (2018).
+Data augmentation for improving deep learning in image classification problem.
+2018 International Interdisciplinary PhD Workshop (IIPhDW).
+IEEE.
 
