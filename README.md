@@ -59,5 +59,47 @@ Even though there are very different datasets the findings and results that were
 
 
 
+# Selected Paper
+The selected paper evaluates the performance of different deep learning architectures for image classification jut like our case og image classification with 18 classes.
+This paper was selected because it follows a very strategic methodology and it is very simmilar to the one used in this project:
+- Image classification
+- Convolutional Neural Networks
+- Accuracy 
+- Recall
+- F1-score
+- Confusión matrix
+Even though the datasets are different, this paper gives us a very useful reference of comparison and evaluating and improvising CNN-based image classification models.
+
+
+
+# References
+- One Piece Image Classifier Dataset.
+Kaggle.
+https://www.kaggle.com/datasets
+- TensorFlow Developers.
+TensorFlow Documentation.
+https://www.tensorflow.org/
+- Keras Developers.
+Keras Documentation.
+https://keras.io/
+- Alem, A., & Kumar, S. (2022).
+Deep Learning Models Performance Evaluations for Remote Sensed Image Classification.
+IEEE Access, 10, 111784–111793.
+https://doi.org/10.1109/ACCESS.2022.3215264
+- Simonyan, K., & Zisserman, A. (2015).
+Very Deep Convolutional Networks for Large-Scale Image Recognition.
+International Conference on Learning Representations (ICLR).
+https://arxiv.org/abs/1409.1556
+- Mikołajczyk, A., & Grochowski, M. (2018).
+Data Augmentation for Improving Deep Learning in Image Classification Problem.
+2018 International Interdisciplinary PhD Workshop (IIPhDW).
+IEEE.
+https://doi.org/10.1109/IIPHDW.2018.8388338
+- Tan, M., & Le, Q. V. (2019).
+EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks.
+Proceedings of the 36th International Conference on Machine Learning (ICML).
+https://arxiv.org/abs/1905.11946
+
+
 
 
