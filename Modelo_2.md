@@ -157,6 +157,49 @@ The models prediction would be "Ace" because it has the highest probability.
 
 We selected these metrics because we can relate them with the paper we chose, the same evaluation strategy was implemented to compare and ensure every model was understood.
 
+
+## Mostramos las métricas de nuestro modelo
+``
+import pandas as pd
+
+#Creamos un DataFrame para poder visualizar mejor las métricas de nuestro modelo
+results_cnn_v2 = pd.DataFrame({
+    "Metric": [
+        "Accuracy",
+        "Precision",
+        "Recall",
+        "F1 Score"
+    ],
+    "Value": [
+        accuracy * 100,
+        precision * 100,
+        recall * 100,
+        f1 * 100
+    ]
+})
+
+results_cnn_v2["Value"] = results_cnn_v2["Value"].round(2)
+
+results_cnn_v2
+``
+
+
+
+The results show that the improved CNN model achieved a strong improvment compared to our baseline models, precisión is just a little bit higher thatn accuracy so when de model predicts a charater some of those predictions are reliable, recall says that the model was also able to detect a good part of the real examples for each class. Then we have the F1-Score, which confirms that the model has a good balance between Precision and Recall.
+<br>
+It shows a hughe improvement compared to our first baseline models. 
+
+
+
+
+
+
+
+
+
+
+
+
 ## Training Curves
 ````
 frame = pd.DataFrame(history.history)
