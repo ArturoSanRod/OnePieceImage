@@ -204,13 +204,15 @@ We use these metrics so we can compare to our paper and se the improvment from p
 <br>
 We also display a Confusion Matrix to visualize the performance for each individual class, the ones that are classified correctly, the ones that cause confusion and an overall balance of all the classes. 
 
+![ConfusionMatrix](Imagenes/CM_TF_FT.png)
+
+
 
 # Conclusion
 The Fine-Tuning produced the best model just like our paper said, by taking the previous trained Transfer Learning model and un freezing EfficientNetB7 lasts layers to continue learning the network was able to adapt to the visual patterns from our dataset. 
 
 
 
-# References
 
 
 

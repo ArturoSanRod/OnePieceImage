@@ -469,16 +469,7 @@ We can see a clear wvolution in the first stage of the project.
 <br> Finally the CNN with augmentation achieved the best validation and testa accuracy.
 
 
-# Selected Paper
-The selected paper evaluates the performance of different deep learning architectures for image classification jut like our case og image classification with 18 classes.
-This paper was selected because it follows a very strategic methodology and it is very simmilar to the one used in this project:
-- Image classification
-- Convolutional Neural Networks
-- Accuracy 
-- Recall
-- F1-score
-- Confusión matrix
-Even though the datasets are different, this paper gives us a very useful reference of comparison and evaluating and improvising CNN-based image classification models.
+
 
 ## Result comparison
 - Accuracy: 61.88%

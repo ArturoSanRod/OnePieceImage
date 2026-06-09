@@ -209,6 +209,8 @@ plt.show()
 
 The confusion matrix helps us visualize which classes are being classified correctly and which classes may be confused with other classes, the diagonal shows correct predictions a high value means better performance, this is important because we can visualize all of our 18 classes with our 18 different characters.
 
+![ConfusionMatrix](Imagenes/CM_TL.png)
+
 
 
 ## Conclusion 
