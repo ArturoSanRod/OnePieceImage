@@ -38,3 +38,12 @@ The dataset that we used in this project contains images of One Piece characters
 This dataset was selected because it contains a large number of labeled images that belong to different classes, and the objective of this project is to classify images of different characters organized into separate folders makes it possible to train a supervised learning model.
 <br>You can download the Dataset here: [One Piece Image Classifier](https://www.kaggle.com/datasets/ibrahimserouis99/one-piece-image-classifier).
 
+
+## Models
+1-[ Model_1](Modelo_1.md)
+
+2-[ Model_2](Modelo_2.md)
+
+3-[ Model_3](Modelo_3_TL.md)
+
+4-[ Model_4](Modelo_4_TF_FT.md)
