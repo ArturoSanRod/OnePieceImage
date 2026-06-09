@@ -36,13 +36,14 @@ This dataset was selected because it contains a large number of labeled images t
 
 
 ## Models
-1-[ Model_1](Modelo_1.md)
 
-2-[ Model_2](Modelo_2.md)
+1. [Model 1 - MLP Baseline](Modelo_1.md)
 
-3-[ Model_3](Modelo_3_TL.md)
+2. [Model 2 - CNN](Modelo_2.md)
 
-4-[ Model_4](Modelo_4_TF_FT.md)
+3. [Model 3 - Transfer Learning](Modelo_3_TL.md)
+
+4. [Model 4 - Transfer Learning + Fine-Tuning](Modelo_4_TF_FT.md)
 
 
 ## Final Models comparison
@@ -53,3 +54,10 @@ The results show a consistent improvement on every stage of the project, the bes
 The paper we selected reports a deeper CNN architecture and TL approach allowing and having a better image classification than shallow CNN models. This project follows the same path, the baseline CNN model had a low performance, Transfer Learning and Fine-Tuning kept on improving its accuracy, precision, recall and f1-score.
 <br>
 Even though there are very different datasets the findings and results that were obtained support the conclusions presented in the paper, deep architecture and TL techniques represents better feature extraction of image patterns and it improves overall classification performance.
+
+![Model Comparison](Imagenes/ComparacionFinal.png)
+
+
+
+
+
