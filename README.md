@@ -1,11 +1,7 @@
 # Instituto Tecnológico y de Estudios Superiores de Monterrey Campus Querétaro
 ## Arturo Sánchez Rodríguez | A01275427
 
-
-
 # OnePiece character image classification 
-
-
 
 ## Introduction
 In this project we have an objective to prepare a dataset full of images of OnePiece characters for a future model image classification. The means to this project is to transform the original images into numerical data that can be used by a Machine Learning model or Deep Learning (both are good with dealing with images).
@@ -47,3 +43,13 @@ This dataset was selected because it contains a large number of labeled images t
 3-[ Model_3](Modelo_3_TL.md)
 
 4-[ Model_4](Modelo_4_TF_FT.md)
+
+
+## Final Models comparison
+
+The results show a consistent improvement on every stage of the project, the best overall score was with Transfer Learning and Fine Tuning reaching `71.64%` accuracy, f1-Score of `71.58%`. Fine-Tuning allowed us to adapt and use to our advantage the pre-trained features of the specific dataset (OnePiece), resulting in a better generalization of OnePiece images and its classification performance. 
+
+
+The paper we selected reports a deeper CNN architecture and TL approach allowing and having a better image classification than shallow CNN models. This project follows the same path, the baseline CNN model had a low performance, Transfer Learning and Fine-Tuning kept on improving its accuracy, precision, recall and f1-score.
+<br>
+Even though there are very different datasets the findings and results that were obtained support the conclusions presented in the paper, deep architecture and TL techniques represents better feature extraction of image patterns and it improves overall classification performance.

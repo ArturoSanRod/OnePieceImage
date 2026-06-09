@@ -399,6 +399,62 @@ print(history_cnn_aug.history["val_accuracy"][-1])
 With this we can analyze the final training and validation accuracy of each model.
 
 
+
+# Tabla Comparación Modelos_1
+```
+import pandas as pd
+
+results_baseline = pd.DataFrame({
+    "Model": [
+        "MLP",
+        "CNN",
+        "CNN + Data Augmentation"
+    ],
+    "Train Accuracy": [
+        history.history["accuracy"][-1] * 100,
+        history_cnn.history["accuracy"][-1] * 100,
+        history_cnn_aug.history["accuracy"][-1] * 100
+    ],
+    "Validation Accuracy": [
+        history.history["val_accuracy"][-1] * 100,
+        history_cnn.history["val_accuracy"][-1] * 100,
+        history_cnn_aug.history["val_accuracy"][-1] * 100
+    ],
+    "Test Accuracy": [
+        test_accuracy * 100,
+        test_accuracy_cnn * 100,
+        test_accuracy_cnn_aug * 100
+    ]
+})
+
+results_baseline
+```
+We can see a clear wvolution in the first stage of the project. 
+- MLP obtained the lowest performace because its layer that makes images into numbers and cannot relate pixels.
+- CNN improves by a lot because the layers are able to learn visual patterns like edges, textures and shapes. But the large difference between train accuracy and validation accuracy indicates overfitting.
+- CNN + Data Augmentation made it so train and validation accuracy dont seperate among the baseline, we were able to reduce overfitting.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Model Comparison
 
 | Model | Train Accuracy | Validation Accuracy | Test Accuracy |
