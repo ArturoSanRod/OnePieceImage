@@ -20,7 +20,7 @@ from tensorflow.keras.callbacks import (EarlyStopping, ReduceLROnPlateau)
 
 These are all the libraries needed to build, train, save and evaluate Fine-Tuning model.
 
-## 3. 
+## 3. Loading Processed Dataset
 
 ```
 train_img = np.load("train_img.npy")
@@ -194,10 +194,12 @@ print("Recall   :", recall_tl_ft)
 print("F1 Score :", f1_tl_ft)
 ```
 We then load the model that we saved (the best model) so we can evaluate not just the last epoch but the best performing model obtained during training. The metrics we are using are the ones that follow:
-- Accuracy : 0.7163543441226575
-- Precision: 0.7195398826947208
-- Recall   : 0.7163543441226575
-- F1 Score : 0.715776442463632
+| Metric | Value |
+|---|---:|
+| Accuracy | 71.64% |
+| Precision | 71.95% |
+| Recall | 71.64% |
+| F1 Score | 71.58% |
 <br> 
 We use these metrics so we can compare to our paper and se the improvment from previous models.
 
