@@ -62,7 +62,17 @@ layers.MaxPooling2D()`applies 32 filters of size 3 by 3 so it helps it learn vis
 <br> 
 
 ## Compile the Model
-[Compile the Model](#then-we-compile-the-model)
+```
+def compile_model(model):
+    model.compile(
+        optimizer="adam",
+        loss="sparse_categorical_crossentropy",
+        metrics=["accuracy"]
+    )
+
+compile_model(model_cnn_v2)
+```
+
 
 
 ## Checkpoint Callback
@@ -161,7 +171,7 @@ We selected these metrics because we can relate them with the paper we chose, th
 
 
 
-## Mostramos las métricas de nuestro modelo
+## Model Performance Summary
 ```
 import pandas as pd
 
@@ -246,7 +256,6 @@ To make sure we visualize and understand the behaviour of the model during the t
 
 
 
-
 ## Confusion Matrix
 
 ````
@@ -273,7 +282,6 @@ With this Confusion Matrix we can see that the main diagonal representes the cor
 ![ConfusionMatrix](Imagenes/CM_M2.png)
 
 
-
 ## Saving the Model
 ````
 model_cnn_v2.save("onepiece_model.keras")
@@ -290,55 +298,7 @@ loaded_model = tf.keras.models.load_model(
 Here is where we save the model, we save it because training a CNN can take time depending on the dataset, with this we save time and only has to be performed once.
 
 
-## Image Classification Query System
 
-````
-import numpy as np
-import tensorflow as tf
-import matplotlib.pyplot as plt
-
-# Cargar el modelo guardado
-model_query = tf.keras.models.load_model("best_model.keras")
-
-# Función para preparar una imagen nueva
-def cargar_imagen_query(image_path, img_size=(64, 64)):
-    img = tf.keras.utils.load_img(image_path, target_size=img_size)
-    img_array = tf.keras.utils.img_to_array(img)
-    img_array = img_array / 255.0
-    img_array = np.expand_dims(img_array, axis=0)
-    return img, img_array
-
-# Función para predecir una imagen
-def predecir_imagen(image_path):
-    img, img_array = cargar_imagen_query(image_path)
-
-    predictions = model_query.predict(img_array)
-
-    predicted_index = np.argmax(predictions[0])
-    confidence = np.max(predictions[0])
-
-    predicted_class = class_names[predicted_index]
-
-    print("Predicción:", predicted_class)
-    print("Confianza:", confidence)
-
-    plt.imshow(img)
-    plt.title(f"Predicción: {predicted_class} | Confianza: {confidence:.2f}")
-    plt.axis("off")
-    plt.show()
-
-    return predicted_class, confidence
-
-image_path = "/Users/arturosr/Desktop/OnePiece/OnePieceImage/Imagenes/OnePieceImagnesPrueba/05.png"
-
-predecir_imagen(image_path)
-````
-
-After everything that was done the only thing left to do is to try the model, we load images outside the dataset and see how it performs. `model_query = tf.keras.models.load_model(
-    "best_model.keras"
-)` we load the best model that we saved so we dont have to retrain the whole CNN everytime we need to classify an image. 
-<br>We have to process the images because images that are not from the dataset may have different dimensions, thats why we use: ` def cargar_imagen_query(image_path, img_size=(64, 64)):`, we have to prepare the images so the CNN can process them correctly.
-<br>Then we load the new image, process them and generate a prediction with our CNN, it then displays the image with the prediction of the class and the "trust" it has on that prediction.
 
 
 

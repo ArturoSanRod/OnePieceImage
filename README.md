@@ -71,6 +71,73 @@ This paper was selected because it follows a very strategic methodology and it i
 Even though the datasets are different, this paper gives us a very useful reference of comparison and evaluating and improvising CNN-based image classification models.
 
 
+# Image Classification Query System
+
+````
+import numpy as np
+import tensorflow as tf
+import matplotlib.pyplot as plt
+
+class_names = np.load("class_names.npy", allow_pickle=True) #Cargamos los nombres de las clases para la predicción
+
+# Cargar el modelo guardado
+model_query = tf.keras.models.load_model("best_model_tl_ft.keras")#Cargamos el modelo que guardamos con el mejor rendimiento para hacer las predicciones
+
+# Función para preparar una imagen nueva
+def cargar_imagen_query(image_path, img_size=(64, 64)): 
+    img = tf.keras.utils.load_img(image_path, target_size=img_size)
+    img_array = tf.keras.utils.img_to_array(img)
+    img_array = img_array / 255.0
+    img_array = np.expand_dims(img_array, axis=0)
+    return img, img_array
+#Cargamos la imagen que queremos que el modelo haga predicción y la preparamos para que pueda procesarla)
+
+# Función para predecir una imagen 
+def predecir_imagen(image_path):
+    img, img_array = cargar_imagen_query(image_path)
+
+    predictions = model_query.predict(img_array)#Hacemos la predicción con el modelo cargado utilizando la imagen que preparamos
+
+    predicted_index = np.argmax(predictions[0])#Obtenemos el índice de la clase con la mayor probabilidad
+    confidence = np.max(predictions[0])#Obtenemos la confianza de la predicción 
+
+    predicted_class = class_names[predicted_index]#Sacamos el nombre de la clase de la predicción
+
+    print("Predicción:", predicted_class)
+    print("Confianza:", confidence)
+
+    plt.imshow(img)
+    plt.title(f"Predicción: {predicted_class} | Confianza: {confidence:.2f}")
+    plt.axis("off")
+    plt.show()
+
+    return predicted_class, confidence
+
+#La ruta de la imagen que queremos predecir
+image_path = "/Users/arturosr/Desktop/OnePiece/OnePieceImage/Imagenes/OnePieceImagnesPrueba/02.png"
+
+predecir_imagen(image_path)
+````
+
+After everything that was done the only thing left to do is to try the model, we load images outside the dataset and see how it performs. `model_query = tf.keras.models.load_model(
+    "best_model.keras"
+)` we load the best model that we saved so we dont have to retrain the whole CNN everytime we need to classify an image. 
+<br>We have to process the images because images that are not from the dataset may have different dimensions, thats why we use: ` def cargar_imagen_query(image_path, img_size=(64, 64)):`, we have to prepare the images so the CNN can process them correctly.
+<br>Then we load the new image, process them and generate a prediction with our CNN, it then displays the image with the prediction of the class and the "trust" it has on that prediction.
+
+![Queries Example](Imagenes/QueriesEj.png)
+
+
+
+
+
+## Conclusion
+Throughout this project, we explored differetn approaches for the main problem of image classification using a dataset full of One Piece characters, containing 18 different classes that represent 18 different characters. The workflow of starting with a simple model like the MLP and CNN helped us understand the dificulty of image classification and show how simple and non reliable a basic architecture has, then the next step would be to apply more parameters we can alter and manage to increase accuracy.
+<br> 
+Each stage of this project keeps on improving the performance of each model, the best results we had was with Transfer Learning + Fine-Tuning, with results like aproximately 71.64% accuracy and 71.58% F1-Score, which is a huge improvement. We can say and compare to our paper that deeper architectures and pretrained models can learn visual patterns better than simple CNN models, we share a conclusion with our paper where Transfer Learning and deeper networks will achieve better image classification results.
+<br>
+Overall the project followed a workflow which looks for improvment in each and every stage of the machine learning, including dataset preparation, preprocessing, model implementation, evaluation and refinement to keep searching for the best model possible.
+
 
 # References
 - One Piece Image Classifier Dataset.

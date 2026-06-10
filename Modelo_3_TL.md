@@ -178,6 +178,15 @@ Based on the paper we chose we are evaluating using:
 - Recall: Tells us how many real examples we successfully detected.
 - F1-Score: Combines Precision and Recall into a single value.
 
+## Transfer Learning Results
+
+| Metric | Value |
+|---|---:|
+| Accuracy | 68.61% |
+| Precision | 68.78% |
+| Recall | 68.61% |
+| F1 Score | 68.52% |
+
 
 ## 9. Confusion Matrix
 ```

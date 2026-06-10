@@ -435,26 +435,6 @@ We can see a clear wvolution in the first stage of the project.
 - CNN + Data Augmentation made it so train and validation accuracy dont seperate among the baseline, we were able to reduce overfitting.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## Model Comparison
 
 | Model | Train Accuracy | Validation Accuracy | Test Accuracy |
@@ -471,23 +451,6 @@ We can see a clear wvolution in the first stage of the project.
 
 
 
-## Result comparison
-- Accuracy: 61.88%
-- Precision: 63.86%
-- Recall: 61.88%
-- F1 Score: 61.86%
-<br>Even though the performance is lower than some results reported, these values are considered reasonable considering
-
-- Different dataset
-- Different image resolution
-- Different number of classes
-- Simple architecture
-- No transfer learning used (yet)
-
-<br>The paper reports that deeper CNN architectures generally have better outcomes and obviously better performance.
-<br>We had an increase of of good results in this project and are still working on getting even better results.
-
 - Alem, A., & Kumar, S. (2022). Deep Learning Models Performance Evaluations for Remote Sensed Image Classification. IEEE Access, 10, 111784–111793. https://doi.org/10.1109/ACCESS.2022.3215264
-
 
 
