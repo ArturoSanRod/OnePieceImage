@@ -171,6 +171,13 @@ https://doi.org/10.1109/IIPHDW.2018.8388338
 EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks.
 Proceedings of the 36th International Conference on Machine Learning (ICML).
 https://arxiv.org/abs/1905.11946
+- Artificial Intelligence Course Notes and Examples.
+  TensorFlow MNIST Example.
+  Data Augmentation Example.
+  Transfer Learning Example.
+  Evaluation and Refinement Example.
+  Tecnológico de Monterrey, Campus Querétaro.
+  2026.
 
 
 
