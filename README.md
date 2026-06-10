@@ -70,6 +70,11 @@ This paper was selected because it follows a very strategic methodology and it i
 - Confusión matrix
 Even though the datasets are different, this paper gives us a very useful reference of comparison and evaluating and improvising CNN-based image classification models.
 
+<br>
+Alem, A., & Kumar, S. (2022).
+Deep Learning Models Performance Evaluations for Remote Sensed Image Classification.
+IEEE Access, 10, 111784–111793.
+
 
 # Image Classification Query System
 
